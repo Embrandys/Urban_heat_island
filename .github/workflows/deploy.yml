@@ -1,0 +1,41 @@
+name: Deploy to Azure Storage Static Website (SAS)
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - "index.html"
+      - "data/**"
+      - ".github/workflows/deploy.yml"
+  workflow_dispatch: {}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Upload site to $web using azcopy (SAS)
+        shell: bash
+        run: |
+          set -e
+
+          curl -L https://aka.ms/downloadazcopy-v10-linux | tar -xz
+          AZCOPY=$(find . -type f -name azcopy | head -n 1)
+          chmod +x "$AZCOPY"
+
+          SAS="${{ secrets.AZURE_STORAGE_SAS }}"
+          if [[ "$SAS" != \?* ]]; then
+            SAS="?$SAS"
+          fi
+
+          CONTAINER_URL="https://${{ secrets.AZURE_STORAGE_ACCOUNT }}.blob.core.windows.net/\$web${SAS}"
+
+          # index.html do root
+          "$AZCOPY" copy "index.html" "$CONTAINER_URL" --overwrite=true
+
+          # data/ do root (czyli powstanie $web/data/...)
+          # jeśli chcesz NIE publikować skryptów, wyklucz processing
+          "$AZCOPY" copy "data" "$CONTAINER_URL" --recursive --overwrite=true --exclude-path "processing"

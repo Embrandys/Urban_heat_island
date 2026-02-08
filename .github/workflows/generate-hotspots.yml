@@ -59,6 +59,6 @@ jobs:
             SAS="?$SAS"
           fi
 
-          CONTAINER_URL="https://${{ secrets.AZURE_STORAGE_ACCOUNT }}.blob.core.windows.net/%24web?${{SAS}}"
+          CONTAINER_URL="https://${{ secrets.AZURE_STORAGE_ACCOUNT }}.blob.core.windows.net/%24web?${SAS}"
 
           "$AZCOPY" copy "data/hotspots_*.geojson" "${CONTAINER_URL}/data/" --overwrite=true

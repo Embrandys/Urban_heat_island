@@ -15,12 +15,12 @@ import planetary_computer as pc
 
 
 # --- PROJ fix ----------------
-venv = os.environ.get("VIRTUAL_ENV")
-if venv:
-    proj_data = Path(venv) / "Lib" / "site-packages" / "rasterio" / "proj_data"
-    if proj_data.exists():
-        os.environ["PROJ_LIB"] = str(proj_data)
-        os.environ.pop("PROJ_DATA", None)
+# venv = os.environ.get("VIRTUAL_ENV")
+# if venv:
+#     proj_data = Path(venv) / "Lib" / "site-packages" / "rasterio" / "proj_data"
+#     if proj_data.exists():
+#         os.environ["PROJ_LIB"] = str(proj_data)
+#         os.environ.pop("PROJ_DATA", None)
 
 
 # --------- konfiguracja ---------

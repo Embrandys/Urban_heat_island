@@ -3,16 +3,11 @@ import json
 from pathlib import Path
 from typing import Optional, Tuple, Dict, Any, List
 import pyproj
-import sys
+
+
+os.environ["PROJ_LIB"] = pyproj.datadir.get_data_dir()
+
 import rasterio
-
-if sys.platform.startswith("win"):
-    # Windows / lokalny komputer: pyproj datadir działa dobrze
-    os.environ["PROJ_LIB"] = pyproj.datadir.get_data_dir()
-else:
-    # Linux / GitHub Actions / Azure: rasterio ma bundlowany PROJ kompatybilny
-    os.environ["PROJ_LIB"] = rasterio._env._RUNTIME_PROJ_DIR
-
 import numpy as np
 from rasterio.warp import transform as warp_transform
 from pystac_client import Client
@@ -20,13 +15,13 @@ import planetary_computer as pc
 
 
 
-#--- PROJ fix ----------------
-venv = os.environ.get("VIRTUAL_ENV")
-if venv:
-    proj_data = Path(venv) / "Lib" / "site-packages" / "rasterio" / "proj_data"
-    if proj_data.exists():
-        os.environ["PROJ_LIB"] = str(proj_data)
-        os.environ.pop("PROJ_DATA", None)
+# #--- PROJ fix ----------------
+# venv = os.environ.get("VIRTUAL_ENV")
+# if venv:
+#     proj_data = Path(venv) / "Lib" / "site-packages" / "rasterio" / "proj_data"
+#     if proj_data.exists():
+#         os.environ["PROJ_LIB"] = str(proj_data)
+#         os.environ.pop("PROJ_DATA", None)
 
 
 # --------- konfiguracja ---------

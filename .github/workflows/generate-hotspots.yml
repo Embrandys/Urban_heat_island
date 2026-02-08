@@ -19,18 +19,19 @@ jobs:
           python-version: 3.11
           auto-activate-base: false
 
-      - name: Create env with compatible rasterio / pyproj
+      - name: Create conda env with compatible rasterio / pyproj / numpy
         run: |
-          conda create -n gh-env -y python=3.11 rasterio=1.3.10 pyproj=3.6 numpy 
-          conda activate gh-env
-          # install planetary-computer via pip inside conda env
-          pip install planetary-computer pystac-client
-          python -c "import rasterio; print(rasterio.__version__); import pyproj; print(pyproj.__version__); import planetary_computer; print('PC OK') import pystac_client; print('Pystac OK')"
+          # tworzymy środowisko conda z kompatybilnym rasterio i pyproj
+          conda create -n gh-env -y python=3.11 rasterio=1.3.10 pyproj=3.6 numpy
+          # instalacja paczek z pip wewnątrz środowiska conda
+          conda run -n gh-env pip install planetary-computer pystac-client
+          # test pakietów
+          conda run -n gh-env python -c "import rasterio; print('rasterio', rasterio.__version__); import pyproj; print('pyproj', pyproj.__version__); import planetary_computer; print('planetary_computer OK'); import pystac_client; print('pystac_client OK')"
 
       - name: Run generator
         run: |
-          conda activate gh-env
-          python data/processing/make_hotspots_from_api.py
+          # uruchamiamy skrypt w środowisku conda
+          conda run -n gh-env python data/processing/make_hotspots_from_api.py
 
       - name: Upload generated GeoJSON to Azure ($web/data) using azcopy (SAS)
         shell: bash
@@ -41,10 +42,4 @@ jobs:
           chmod +x "$AZCOPY"
 
           SAS="${{ secrets.AZURE_STORAGE_SAS }}"
-          if [[ "$SAS" != \?* ]]; then
-            SAS="?$SAS"
-          fi
-
-          CONTAINER_URL="https://${{ secrets.AZURE_STORAGE_ACCOUNT }}.blob.core.windows.net/\$web${SAS}"
-
-          "$AZCOPY" copy "data/hotspots_*.geojson" "${CONTAINER_URL}/data/" --overwrite=true
+          if [[ "$SAS" != \?]()]()

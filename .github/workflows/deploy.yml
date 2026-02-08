@@ -2,7 +2,7 @@ name: Deploy to Azure Storage Static Website (SAS)
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "master" ]
     paths:
       - "index.html"
       - "data/**"

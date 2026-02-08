@@ -20,7 +20,7 @@ if venv:
 
 
 # --------- konfiguracja ---------
-DATE = os.getenv("DATE", "2025-07-24")
+DATE = os.getenv("DATE", "2025-06-05")
 BBOX = tuple(map(float, os.getenv("BBOX", "19.80,49.98,20.15,50.12").split(",")))  # (minLon, minLat, maxLon, maxLat)
 
 OUT_DIR = os.getenv("OUT_DIR", "data")

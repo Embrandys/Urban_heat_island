@@ -3,11 +3,17 @@ import json
 from pathlib import Path
 from typing import Optional, Tuple, Dict, Any, List
 import pyproj
+import sys
+import rasterio
 
-os.environ["PROJ_LIB"] = pyproj.datadir.get_data_dir()
+if sys.platform.startswith("win"):
+    # Windows / lokalny komputer: pyproj datadir działa dobrze
+    os.environ["PROJ_LIB"] = pyproj.datadir.get_data_dir()
+else:
+    # Linux / GitHub Actions / Azure: rasterio ma bundlowany PROJ kompatybilny
+    os.environ["PROJ_LIB"] = rasterio._env.loader.proj_dir
 
 import numpy as np
-import rasterio
 from rasterio.warp import transform as warp_transform
 from pystac_client import Client
 import planetary_computer as pc

@@ -11,7 +11,7 @@ if sys.platform.startswith("win"):
     os.environ["PROJ_LIB"] = pyproj.datadir.get_data_dir()
 else:
     # Linux / GitHub Actions / Azure: rasterio ma bundlowany PROJ kompatybilny
-    os.environ["PROJ_LIB"] = rasterio._env.loader.proj_dir
+    os.environ["PROJ_LIB"] = rasterio._env._RUNTIME_PROJ_DIR
 
 import numpy as np
 from rasterio.warp import transform as warp_transform

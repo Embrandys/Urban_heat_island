@@ -54,11 +54,6 @@ jobs:
           AZCOPY=$(find . -type f -name azcopy | head -n 1)
           chmod +x "$AZCOPY"
 
-          SAS="${{ secrets.AZURE_STORAGE_SAS }}"
-          if [[ "$SAS" != \?* ]]; then
-            SAS="?$SAS"
-          fi
-
-          CONTAINER_URL="https://${{ secrets.AZURE_STORAGE_ACCOUNT }}.blob.core.windows.net/\$web${SAS}"
+          CONTAINER_URL="https://${{ secrets.AZURE_STORAGE_ACCOUNT }}.blob.core.windows.net/%24web?${{ secrets.AZURE_STORAGE_SAS }}"
 
           "$AZCOPY" copy "data/hotspots_*.geojson" "${CONTAINER_URL}/data/" --overwrite=true

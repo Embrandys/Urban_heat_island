@@ -2,12 +2,16 @@ import os
 import json
 from pathlib import Path
 from typing import Optional, Tuple, Dict, Any, List
+import pyproj
+
+os.environ["PROJ_LIB"] = pyproj.datadir.get_data_dir()
 
 import numpy as np
 import rasterio
 from rasterio.warp import transform as warp_transform
 from pystac_client import Client
 import planetary_computer as pc
+
 
 
 # --- PROJ fix ----------------
